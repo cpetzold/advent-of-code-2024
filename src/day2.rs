@@ -1,15 +1,17 @@
 use aoc_runner_derive::{aoc, aoc_generator};
+use nom::{
+    character::complete::{i32, newline, space1},
+    multi::separated_list0,
+};
 
 #[aoc_generator(day2)]
 pub fn input_generator(input: &str) -> Vec<Vec<i32>> {
-    input
-        .lines()
-        .map(|l| {
-            l.split_whitespace()
-                .map(|x| x.parse::<i32>().unwrap())
-                .collect()
-        })
-        .collect()
+    separated_list0(
+        newline::<&str, nom::error::Error<&str>>,
+        separated_list0(space1, i32),
+    )(input)
+    .map(|(_, result)| result)
+    .unwrap()
 }
 
 #[aoc(day2, part1)]
