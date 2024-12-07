@@ -74,6 +74,7 @@ fn get_visited(map: &Map) -> Option<HashMap<IVec2, HashSet<IVec2>>> {
         let in_front = position + direction;
         if map.obstructions.contains(&in_front) {
             direction = direction.perp();
+            continue;
         }
 
         position += direction;
