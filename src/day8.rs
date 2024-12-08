@@ -16,10 +16,11 @@ use nom::{
     IResult,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Map {
     size: IVec2,
     antennas: HashMap<char, Vec<IVec2>>,
+    pub resonant_harmonics: bool,
 }
 
 impl Map {
@@ -33,8 +34,39 @@ impl Map {
         None
     }
 
-    fn in_bounds(&self, position: IVec2) -> bool {
+    fn in_bounds(&self, position: &IVec2) -> bool {
         position.x >= 0 && position.x < self.size.x && position.y >= 0 && position.y < self.size.y
+    }
+
+    fn antenna_pair_antinodes(&self, a: &IVec2, b: &IVec2) -> HashSet<IVec2> {
+        let mut antinodes = HashSet::new();
+
+        if self.resonant_harmonics {
+            let d = b - a;
+            let mut curr = a.clone();
+            while self.in_bounds(&curr) {
+                antinodes.insert(curr);
+                curr -= d;
+            }
+
+            let d = a - b;
+            curr = b.clone();
+            while self.in_bounds(&curr) {
+                antinodes.insert(curr);
+                curr -= d;
+            }
+        } else {
+            let x = a - (b - a);
+            let y = b - (a - b);
+            if self.in_bounds(&x) {
+                antinodes.insert(x);
+            }
+            if self.in_bounds(&y) {
+                antinodes.insert(y);
+            }
+        }
+
+        antinodes
     }
 
     fn get_antinodes(&self) -> HashSet<IVec2> {
@@ -42,14 +74,7 @@ impl Map {
             .values()
             .fold(HashSet::new(), |mut acc, antennas| {
                 for (a, b) in antennas.iter().tuple_combinations() {
-                    let x = a - (b - a);
-                    let y = b - (a - b);
-                    if self.in_bounds(x) {
-                        acc.insert(x);
-                    }
-                    if self.in_bounds(y) {
-                        acc.insert(y);
-                    }
+                    acc.extend(&self.antenna_pair_antinodes(a, b));
                 }
 
                 acc
@@ -118,17 +143,24 @@ pub fn input_generator(input: &str) -> Map {
     Map {
         size: IVec2::new(width as i32, height as i32),
         antennas,
+        resonant_harmonics: false,
     }
 }
 
 #[aoc(day8, part1)]
 pub fn solve_part1(map: &Map) -> usize {
     let antinodes = map.get_antinodes();
-    dbg!(&map.size);
 
     println!("{}", map);
 
     antinodes.len()
+}
+
+#[aoc(day8, part2)]
+pub fn solve_part2(map: &Map) -> usize {
+    let mut map = map.clone();
+    map.resonant_harmonics = true;
+    solve_part1(&map)
 }
 
 #[cfg(test)]
@@ -169,5 +201,29 @@ mod tests {
 ..........#.
 ..........#."
         );
+
+        assert_eq!(solve_part1(&map), 9);
+    }
+
+    #[test]
+    fn test_day8_part2() {
+        let input = "............
+........0...
+.....0......
+.......0....
+....0.......
+......A.....
+............
+............
+........A...
+.........A..
+............
+............";
+
+        let map = input_generator(&input);
+
+        let output = solve_part2(&map);
+
+        assert_eq!(output, 34);
     }
 }
