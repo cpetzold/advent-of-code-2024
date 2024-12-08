@@ -70,26 +70,3 @@ pub fn solve_part2(formulas: &Vec<(i64, Vec<i64>)>) -> i64 {
 
     valid_formulas.map(|(solution, _)| solution).sum()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_day7_part1() {
-        let input = "190: 10 19
-3267: 81 40 27
-83: 17 5
-156: 15 6
-7290: 6 8 6 15
-161011: 16 10 13
-192: 17 8 14
-21037: 9 7 18 13
-292: 11 6 16 20";
-        let map = input_generator(input);
-        dbg!(solve_part1(&map));
-
-        let operators = get_operators(3, &vec![1, 1, 2]);
-        dbg!(operators);
-    }
-}
