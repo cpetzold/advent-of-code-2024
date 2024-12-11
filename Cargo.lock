@@ -13,6 +13,7 @@ dependencies = [
  "nom",
  "strum",
  "strum_macros",
+ "vecgrid",
 ]
 
 [[package]]
@@ -207,3 +208,9 @@ name = "unicode-ident"
 version = "1.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "adb9e6ca4f869e1180728b7950e35922a7fc6397f7b641499e8f3ef06e50dc83"
+
+[[package]]
+name = "vecgrid"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d45d5daefa51ff6e38df01a6e66b9b65d69af2cc4e95e3f34d62d9c288b8731"
