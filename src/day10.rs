@@ -2,7 +2,7 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use glam::IVec2;
 use itertools::Itertools;
 use nom::{
-    character::complete::{digit1, line_ending, satisfy},
+    character::complete::{line_ending, satisfy},
     multi::many1,
     sequence::terminated,
     IResult, Parser,
