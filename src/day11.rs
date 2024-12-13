@@ -92,9 +92,9 @@ mod test {
     fn test_stones() {
         let input = "125 17";
         let mut stones = Stones::from_str(input);
-        assert_eq!(stones.next(), Some(vec![125, 17]));
-        assert_eq!(stones.next(), Some(vec![253000, 1, 7]));
-        assert_eq!(stones.next(), Some(vec![253, 0, 2024, 14168]));
-        assert_eq!(stones.nth(22).map(|v| v.len()), Some(55312));
+        assert_eq!(stones.next(), Some(2));
+        assert_eq!(stones.next(), Some(3));
+        assert_eq!(stones.next(), Some(4));
+        assert_eq!(stones.nth(22), Some(55312));
     }
 }
